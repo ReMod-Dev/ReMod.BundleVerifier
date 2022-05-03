@@ -1,0 +1,117 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Condition="'$(VRCPath)'==''">
+    <VRCPath Condition="Exists('C:/Program Files (x86)/Steam/steamapps/common/VRChat')">C:/Program Files (x86)/Steam/steamapps/common/VRChat</VRCPath>
+    <VRCPath Condition="Exists('$(HOME)/.steam/steam/steamapps/common/VRChat')">$(HOME)/.steam/steam/steamapps/common/VRChat</VRCPath>
+    <VRCPath Condition="Exists('S:\Games\steamapps\common\VRChat')">S:\Games\steamapps\common\VRChat</VRCPath>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(MlPath)'==''">
+    <MlPath>$(SolutionDir)\3rdparty\ml</MlPath>
+    <MlPath Condition="!Exists('$(MlPath)') And Exists('$(VRCPath)/MelonLoader')">$(VRCPath)/MelonLoader</MlPath>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+	<ProjectGuid>{AB3C5ED9-6C69-4370-85A5-2CF5EF5C0D26}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace>ReMod.BundleVerifier</RootNamespace>
+    <AssemblyName>ReMod.BundleVerifier</AssemblyName>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <PlatformTarget>x64</PlatformTarget>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>$(SolutionDir)\.build\$(Configuration) ($(PlatformTarget))\Modules\$(ProjectName)\</OutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\tmp\$(Configuration) ($(PlatformTarget))\$(ProjectName)\</IntermediateOutputPath>
+    <DebugSymbols Condition="'$(Configuration)'=='Release'">false</DebugSymbols>
+    <DebugType Condition="'$(Configuration)'=='Release'">None</DebugType>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+ 
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(MlPath)\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>$(MlPath)\Managed\Il2Cppmscorlib.dll</HintPath>
+	  <Private>False</Private>
+    </Reference>
+    <Reference Include="Il2CppSystem.Core">
+      <HintPath>$(MlPath)\Managed\Il2CppSystem.Core.dll</HintPath>
+	  <Private>False</Private>
+    </Reference>
+    <Reference Include="MelonLoader">
+      <HintPath>$(MlPath)\MelonLoader.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnhollowerBaseLib">
+      <HintPath>$(MlPath)\Managed\UnhollowerBaseLib.dll</HintPath>
+	  <Private>False</Private>
+    </Reference>
+    <Reference Include="UnhollowerRuntimeLib">
+      <HintPath>$(MlPath)\Managed\UnhollowerRuntimeLib.dll</HintPath>
+	  <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(MlPath)\Managed\UnityEngine.dll</HintPath>
+	  <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(MlPath)\Managed\UnityEngine.CoreModule.dll</HintPath>
+	  <Private>False</Private>
+    </Reference>
+    <Reference Include="VRCCore-Standalone">
+      <HintPath>$(MlPath)\Managed\VRCCore-Standalone.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+	
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+	<Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="BundleDlContext.cs" />
+    <Compile Include="BundleDlInterceptor.cs" />
+    <Compile Include="BundleDownloadMethods.cs" />
+    <Compile Include="BundleHashCache.cs" />
+    <Compile Include="BundleVerifierMod.cs" />
+    <Compile Include="NativePatchUtils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RestrictedProcessRunner\BundleVerifierProcessHandle.cs" />
+    <Compile Include="RestrictedProcessRunner\Interop\InteropMethods.cs" />
+    <Compile Include="RestrictedProcessRunner\Interop\JobHandle.cs" />
+    <Compile Include="RestrictedProcessRunner\Interop\ProcessHandle.cs" />
+    <Compile Include="RestrictedProcessRunner\MemoryMapWriterStream.cs" />
+    <Compile Include="RestrictedProcessRunner\RestrictedProcessHandle.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="BundleVerifier.zip" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\ReMod.Core\ReMod.Core.csproj">
+      <Project>{c87fe758-acb9-4fa2-af6f-10aa9aa0023c}</Project>
+      <Name>ReMod.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReMod.Loader\ReMod.Loader.csproj">
+      <Project>{ffeb5ee1-dd97-4796-b437-a60f9cccc39d}</Project>
+      <Name>ReMod.Loader</Name>
+    </ProjectReference>
+  </ItemGroup>
+
+</Project>
