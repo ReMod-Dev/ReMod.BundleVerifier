@@ -38,8 +38,6 @@ namespace ReMod.BundleVerifier
 
         internal static bool Init()
         {
-            ReLogger.Msg("Init for gay patches");
-
             string unityPlayerHash;
             {
                 using var sha = SHA512.Create();
