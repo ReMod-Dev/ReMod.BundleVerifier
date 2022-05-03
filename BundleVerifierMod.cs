@@ -8,6 +8,9 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using VRC.Core;
+using ReMod.Core.Managers;
+using ReMod.Core.UI.QuickMenu;
+using ReMod.Core.VRChat;
 
 namespace ReMod.BundleVerifier
 {
@@ -24,6 +27,12 @@ namespace ReMod.BundleVerifier
         internal static BundleHashCache ForceAllowedCache;
 
         internal static string BundleVerifierPath;
+
+        private ReMenuToggle _bvEnabled;
+        private ReMenuToggle _bvOnlyPublics;
+        private ReMenuButton _bvTimeLimitButton;
+        private ReMenuButton _bvMemoryLimitButton;
+        private ReMenuButton _bvComponentLimitButton;
 
         public BundleVerifierMod()
         {
@@ -55,20 +64,38 @@ namespace ReMod.BundleVerifier
             EnabledSetting.OnValueChanged += () => MelonCoroutines.Start(CheckInstanceType());
             OnlyPublics.OnValueChanged += () => MelonCoroutines.Start(CheckInstanceType());
         }
-
         public override void OnApplicationQuit()
-        { 
+        {
             BadBundleCache?.Dispose();
         }
-
-        public override void OnLeftRoom()
+        
+        public override void OnUiManagerInit(UiManager uiManager)
         {
-            BundleDlInterceptor.ShouldIntercept = false;
-        }
+            var bundleVerifierMenu = uiManager.MainMenu.GetCategoryPage("Protection").AddCategory("Bundle Verifier");
 
+            _bvEnabled = bundleVerifierMenu.AddToggle("Enabled", "Enable/disable the bundle verifier", EnabledSetting);
+            _bvOnlyPublics = bundleVerifierMenu.AddToggle("Only Publics", "Only check bundles in public worlds", OnlyPublics);
+
+            _bvTimeLimitButton = bundleVerifierMenu.AddButton($"Time Limit: {TimeLimit}", "Time limit (seconds)",
+                () => VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowInputPopup("Time Limit", TimeLimit, _bvTimeLimitButton),
+                ResourceManager.GetSprite("remod.cogwheel"));
+
+            _bvMemoryLimitButton = bundleVerifierMenu.AddButton($"Memory Limit: {MemoryLimit}", "Memory limit (megabytes)",
+                () => VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowInputPopup("Memory Limit", MemoryLimit, _bvMemoryLimitButton),
+                ResourceManager.GetSprite("remod.cogwheel"));
+
+            _bvComponentLimitButton = bundleVerifierMenu.AddButton($"Component Limit: {ComponentLimit}", "Component limit (0=unlimited)",
+                () => VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowInputPopup("Component Limit", ComponentLimit, _bvComponentLimitButton),
+                ResourceManager.GetSprite("remod.cogwheel"));
+        }
         public override void OnJoinedRoom()
         {
             MelonCoroutines.Start(CheckInstanceType());
+        }
+        
+        public override void OnLeftRoom()
+        {
+            BundleDlInterceptor.ShouldIntercept = false;
         }
 
         private static IEnumerator CheckInstanceType()
