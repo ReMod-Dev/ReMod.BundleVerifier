@@ -25,7 +25,6 @@
     <LangVersion>latest</LangVersion>
     <PlatformTarget>x64</PlatformTarget>
 	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>$(SolutionDir)\.build\$(Configuration) ($(PlatformTarget))\Modules\$(ProjectName)\</OutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\tmp\$(Configuration) ($(PlatformTarget))\$(ProjectName)\</IntermediateOutputPath>
     <DebugSymbols Condition="'$(Configuration)'=='Release'">false</DebugSymbols>
