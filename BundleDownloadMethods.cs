@@ -121,10 +121,10 @@ namespace ReMod.BundleVerifier
         private static AssetBundleDownloadHandlerVTablePrefix ApplyVTablePatches()
         {
             AssetBundleDownloadHandlerVTablePrefix patchedTable = ourOriginalVTable;
-            patchedTable.Prepare = (delegate* unmanaged[Cdecl]<IntPtr, int>)GetDelegatePointerAndPin<PrepareDelegate>(BundleDlInterceptor.PreparePatch);
-            patchedTable.Destructor = (delegate* unmanaged[Cdecl]<IntPtr, long, IntPtr>)GetDelegatePointerAndPin<DtorDelegate>(BundleDlInterceptor.DestructorPatch);
-            patchedTable.OnCompleteContent = (delegate* unmanaged[Cdecl]<IntPtr, void>)GetDelegatePointerAndPin<VoidDelegate>(BundleDlInterceptor.CompletePatch);
-            patchedTable.OnReceiveData = (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, int>)GetDelegatePointerAndPin<ReceiveDelegate>(BundleDlInterceptor.ReceivePatch);
+            patchedTable.Prepare = BundleDlInterceptor.PreparePatch;
+            patchedTable.Destructor = BundleDlInterceptor.DestructorPatch;
+            patchedTable.OnCompleteContent = BundleDlInterceptor.CompletePatch;
+            patchedTable.OnReceiveData = BundleDlInterceptor.ReceivePatch;
             return patchedTable;
         }
 
@@ -159,34 +159,28 @@ namespace ReMod.BundleVerifier
             private IntPtr PrepareValue;
             private IntPtr OnAbortValue;
 
-            public delegate* unmanaged[Cdecl]<IntPtr, long, IntPtr> Destructor
+            public DtorDelegate Destructor
             {
-                get => (delegate* unmanaged[Cdecl]<IntPtr, long, IntPtr>)DestructorValue;
-                set => DestructorValue = (IntPtr)value;
+                get => Marshal.GetDelegateForFunctionPointer<DtorDelegate>(DestructorValue);
+                set => DestructorValue = GetDelegatePointerAndPin(value);
             }
 
-            public delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, int> OnReceiveData
+            public ReceiveDelegate OnReceiveData
             {
-                get => (delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, int>)OnReceiveDataValue;
-                set => OnReceiveDataValue = (IntPtr)value;
+                get => Marshal.GetDelegateForFunctionPointer<ReceiveDelegate>(OnReceiveDataValue);
+                set => OnReceiveDataValue = GetDelegatePointerAndPin(value);
             }
 
-            public delegate* unmanaged[Cdecl]<IntPtr, void> OnCompleteContent
+            public VoidDelegate OnCompleteContent
             {
-                get => (delegate* unmanaged[Cdecl]<IntPtr, void>)OnCompleteContentValue;
-                set => OnCompleteContentValue = (IntPtr)value;
+                get => Marshal.GetDelegateForFunctionPointer<VoidDelegate>(OnCompleteContentValue);
+                set => OnCompleteContentValue = GetDelegatePointerAndPin(value);
             }
 
-            public delegate* unmanaged[Cdecl]<IntPtr, int> Prepare
+            public PrepareDelegate Prepare
             {
-                get => (delegate* unmanaged[Cdecl]<IntPtr, int>)PrepareValue;
-                set => PrepareValue = (IntPtr)value;
-            }
-
-            public delegate* unmanaged[Cdecl]<IntPtr, void> OnAbort
-            {
-                get => (delegate* unmanaged[Cdecl]<IntPtr, void>)OnAbortValue;
-                set => OnAbortValue = (IntPtr)value;
+                get => Marshal.GetDelegateForFunctionPointer<PrepareDelegate>(PrepareValue);
+                set => PrepareValue = GetDelegatePointerAndPin(value);
             }
         }
     }
