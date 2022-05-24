@@ -37,6 +37,9 @@
       <HintPath>$(MlPath)\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DataModel">
+      <HintPath>$(MlPath)\Managed\DataModel.dll</HintPath>
+    </Reference>
     <Reference Include="Il2Cppmscorlib">
       <HintPath>$(MlPath)\Managed\Il2Cppmscorlib.dll</HintPath>
 	  <Private>False</Private>
@@ -64,6 +67,9 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(MlPath)\Managed\UnityEngine.CoreModule.dll</HintPath>
 	  <Private>False</Private>
+    </Reference>
+    <Reference Include="VRC.UI.Elements">
+      <HintPath>$(MlPath)\Managed\VRC.UI.Elements.dll</HintPath>
     </Reference>
     <Reference Include="VRCCore-Standalone">
       <HintPath>$(MlPath)\Managed\VRCCore-Standalone.dll</HintPath>
@@ -103,14 +109,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\ReMod.Core\ReMod.Core.csproj">
-      <Project>{c87fe758-acb9-4fa2-af6f-10aa9aa0023c}</Project>
-      <Name>ReMod.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ReMod.Loader\ReMod.Loader.csproj">
-      <Project>{ffeb5ee1-dd97-4796-b437-a60f9cccc39d}</Project>
-      <Name>ReMod.Loader</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\ReMod.Core\ReMod.Core.csproj" />
+    <ProjectReference Include="..\ReMod.Loader\ReMod.Loader.csproj" />
   </ItemGroup>
 
 </Project>

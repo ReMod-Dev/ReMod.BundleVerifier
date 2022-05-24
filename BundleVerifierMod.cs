@@ -11,6 +11,8 @@ using VRC.Core;
 using ReMod.Core.Managers;
 using ReMod.Core.UI.QuickMenu;
 using ReMod.Core.VRChat;
+using VRC;
+using VRC.DataModel;
 
 namespace ReMod.BundleVerifier
 {
@@ -33,6 +35,8 @@ namespace ReMod.BundleVerifier
         private ReMenuButton _bvTimeLimitButton;
         private ReMenuButton _bvMemoryLimitButton;
         private ReMenuButton _bvComponentLimitButton;
+        private ReMenuButton _bvClearCache;
+        private ReMenuButton _bvForceAllow;
 
         public BundleVerifierMod()
         {
@@ -87,7 +91,60 @@ namespace ReMod.BundleVerifier
             _bvComponentLimitButton = bundleVerifierMenu.AddButton($"Component Limit: {ComponentLimit}", "Component limit (0=unlimited)",
                 () => VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowInputPopup("Component Limit", ComponentLimit, _bvComponentLimitButton),
                 ResourceManager.GetSprite("remod.cogwheel"));
+
+            _bvClearCache = bundleVerifierMenu.AddButton("Reset Cache", "Resets the corrupted bundle cache.",
+                BadBundleCache.Clear, ResourceManager.GetSprite("remod.reload"));
+
+            _bvForceAllow = uiManager.TargetMenu.AddButton("BundleVerifier Allow", "Force allow this bundle.", () =>
+            {
+                var selectedUser = QuickMenuEx.SelectedUserLocal.field_Private_IUser_0;
+                if (selectedUser == null) return;
+                
+                var player = PlayerManager.field_Private_Static_PlayerManager_0.GetPlayer(selectedUser.GetUserID());
+                if (player == null)
+                    return;
+
+                var apiAvatar = player.GetApiAvatar();
+                if (apiAvatar == null)
+                    return;
+                    
+                if (BadBundleCache.Contains(apiAvatar.assetUrl) && !ForceAllowedCache.Contains(apiAvatar.assetUrl))
+                {
+                    ForceAllowedCache.Add(apiAvatar.assetUrl);
+                    VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
+                }
+            }, ResourceManager.GetSprite("remod.cogwheel"));
         }
+
+        public override void OnSelectUser(IUser user, bool isRemote)
+        {
+            if (isRemote) return;
+            
+            var player = PlayerManager.field_Private_Static_PlayerManager_0.GetPlayer(user.GetUserID());
+            if (player == null)
+                return;
+
+            var apiAvatar = player.GetApiAvatar();
+            if (apiAvatar == null)
+                return;
+
+            if (ForceAllowedCache.Contains(apiAvatar.assetUrl))
+            {
+                _bvForceAllow.Interactable = false;
+                _bvForceAllow.Text = "BundleVerifier Allowed (Forced)";
+            }
+            else if (BadBundleCache.Contains(apiAvatar.assetUrl))
+            {
+                _bvForceAllow.Interactable = true;
+                _bvForceAllow.Text = "BundleVerifier Allow";
+            }
+            else
+            {
+                _bvForceAllow.Interactable = false;
+                _bvForceAllow.Text = "BundleVerifier Allowed (Not Blocked)";
+            }
+        }
+
         public override void OnJoinedRoom()
         {
             MelonCoroutines.Start(CheckInstanceType());
