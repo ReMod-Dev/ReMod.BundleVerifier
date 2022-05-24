@@ -39,6 +39,7 @@
     </Reference>
     <Reference Include="DataModel">
       <HintPath>$(MlPath)\Managed\DataModel.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
       <HintPath>$(MlPath)\Managed\Il2Cppmscorlib.dll</HintPath>
@@ -70,6 +71,7 @@
     </Reference>
     <Reference Include="VRC.UI.Elements">
       <HintPath>$(MlPath)\Managed\VRC.UI.Elements.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="VRCCore-Standalone">
       <HintPath>$(MlPath)\Managed\VRCCore-Standalone.dll</HintPath>
