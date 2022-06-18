@@ -104,6 +104,7 @@
     <Compile Include="RestrictedProcessRunner\Interop\ProcessHandle.cs" />
     <Compile Include="RestrictedProcessRunner\MemoryMapWriterStream.cs" />
     <Compile Include="RestrictedProcessRunner\RestrictedProcessHandle.cs" />
+    <Compile Include="VerifierExitCodes.cs" />
   </ItemGroup>
   
   <ItemGroup>

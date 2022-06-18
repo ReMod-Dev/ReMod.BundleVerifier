@@ -102,7 +102,7 @@ namespace ReMod.BundleVerifier
             if (exitCode != 0)
             {
                 var cleanedUrl = BundleVerifierMod.SanitizeUrl(Url);
-                ReLogger.Msg($"Verifier process failed with exit code {exitCode} for bundle uid={cleanedUrl.Item1}+{cleanedUrl.Item2}");
+                ReLogger.Warning($"Verifier process failed with exit code {exitCode} ({VerifierExitCodes.GetExitCodeDescription(exitCode)}) for bundle uid={cleanedUrl.Item1}+{cleanedUrl.Item2}");
                 BundleVerifierMod.BadBundleCache.Add(Url);
                 // feed some garbage into it, otherwise it dies
                 unsafe

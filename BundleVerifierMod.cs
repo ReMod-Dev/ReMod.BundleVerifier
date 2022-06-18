@@ -171,7 +171,7 @@ namespace ReMod.BundleVerifier
             BundleDlInterceptor.ShouldIntercept = !OnlyPublics.Value || currentInstance.type == InstanceAccessType.Public;
         }
 
-        private const string VerifierVersion = "1.1-2019.4.31";
+        private const string VerifierVersion = "1.2-2019.4.31";
 
         private static void PrepareVerifierDir()
         {
@@ -184,6 +184,8 @@ namespace ReMod.BundleVerifier
                 var existingVersion = File.ReadAllText(versionFile);
                 if (existingVersion == VerifierVersion) return;
             }
+
+            BadBundleCache.Clear();
 
             File.Copy(Path.Combine(MelonUtils.GameDirectory, "UnityPlayer.dll"), Path.Combine(baseDir, "UnityPlayer.dll"), true);
             using var zipFile = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("ReMod.BundleVerifier.BundleVerifier.zip")!, ZipArchiveMode.Read, false);
