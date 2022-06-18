@@ -171,7 +171,7 @@ namespace ReMod.BundleVerifier
             BundleDlInterceptor.ShouldIntercept = !OnlyPublics.Value || currentInstance.type == InstanceAccessType.Public;
         }
 
-        private const string VerifierVersion = "1.2-2019.4.31";
+        private const string VerifierVersion = "1.4-2019.4.31";
 
         private static void PrepareVerifierDir()
         {
